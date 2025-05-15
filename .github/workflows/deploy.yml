@@ -13,24 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install OCaml and tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ocaml ocaml-native-compilers opam
-
-      - name: Initialize OPAM
-        run: |
-          opam init --disable-sandboxing -y
-          eval $(opam env)
-
-      - name: Install build tools
-        run: |
-          opam install dune --yes
-          eval $(opam env)
+      - name: Set up OCaml
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: '4.14.0'
+          opam-repositories: |
+            default: https://github.com/ocaml/opam-repository.git
 
       - name: Install dependencies
         run: |
-          opam install js_of_ocaml js_of_ocaml-ppx --yes
+          opam install dune js_of_ocaml js_of_ocaml-ppx --yes
           opam install . --deps-only --yes
 
       - name: Build web demo
