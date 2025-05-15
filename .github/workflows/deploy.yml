@@ -13,22 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install OCaml and tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ocaml opam dune
-
-      - name: Initialize OPAM
-        run: |
-          opam init --disable-sandboxing -y
-          eval $(opam env)
-
-      - name: Create package files
-        run: |
-          echo '(lang dune 3.0)' > dune-project
-          echo '(name fable)' >> dune-project
-          echo '(version 0.1.0)' >> dune-project
-          echo '(package (name fable) (depends (ocaml (>= 4.14.0)) (dune (>= 3.0)) (base (>= v0.15.0)) (ppx_deriving (>= 5.2.1)) (ppx_deriving_yojson (>= 3.6.1)) (yojson (>= 2.0.2)) (cmdliner (>= 1.1.0)) (js_of_ocaml (>= 4.0.0) :optional) (js_of_ocaml-ppx (>= 4.0.0) :optional)))' >> dune-project
+      - name: Set up OCaml
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: '4.14.0'
+          opam-repositories: |
+            default: https://github.com/ocaml/opam-repository.git
 
       - name: Install dependencies
         run: |
