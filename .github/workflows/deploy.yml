@@ -23,9 +23,14 @@ jobs:
           opam init --disable-sandboxing -y
           eval $(opam env)
 
+      - name: Install build tools
+        run: |
+          opam install dune --yes
+          eval $(opam env)
+
       - name: Install dependencies
         run: |
-          opam install dune js_of_ocaml js_of_ocaml-ppx --yes
+          opam install js_of_ocaml js_of_ocaml-ppx --yes
           opam install . --deps-only --yes
 
       - name: Build web demo
