@@ -10,15 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    container:
+      image: ocaml/opam:ubuntu-22.04-ocaml-4.14
     steps:
       - uses: actions/checkout@v3
-
-      - name: Set up OCaml
-        uses: ocaml/setup-ocaml@v2
-        with:
-          ocaml-compiler: '4.14.0'
-          opam-repositories: |
-            default: https://github.com/ocaml/opam-repository.git
 
       - name: Install dependencies
         run: |
