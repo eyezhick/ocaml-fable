@@ -1,0 +1,43 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup OCaml
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-version: '4.14.0'
+          opam-version: '2.1.0'
+
+      - name: Install dependencies
+        run: |
+          opam init -y
+          eval $(opam env)
+          opam install . --deps-only
+
+      - name: Build web demo
+        run: |
+          eval $(opam env)
+          dune build web/fable_web.bc.js
+
+      - name: Prepare GitHub Pages files
+        run: |
+          chmod +x scripts/prepare-gh-pages.sh
+          ./scripts/prepare-gh-pages.sh
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: _build
+          publish_branch: gh-pages
+          commit_message: "Deploy web demo"
+          keep_files: true 

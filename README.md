@@ -14,6 +14,10 @@ Fable is like having a magical quill that writes stories with type safety. It's 
 - **Dynamic Characters**: Give your characters traits that evolve as the story unfolds
 - **World Building**: Define locations with behaviors that respond to player choices
 - **Type-Safe Storytelling**: Let OCaml's type system catch your plot holes before your readers do
+- **Random Events**: Add a dash of unpredictability to your tales
+- **Flags & Inventory**: Track player state, items, and world changes
+- **Dynamic Text**: Use templates for immersive, personalized output
+- **Extensible Effects**: Add sound, visuals, or custom hooks
 
 ## Quick Start
 
@@ -31,10 +35,81 @@ let story =
             ("Continue deeper", explore_cave);
           ]
         ]);
-      ("Feel your way in the dark", fun () ->
-        say "Your hands touch something cold and metallic...");
+      ("Go back to sleep", fun () -> end_story "You sleep forever.");
     ]
   ]
+```
+
+## 🕹️ Demo: What Playing Fable Looks Like
+
+```
+You wake up in a dark cave, the air thick with mystery.
+Your torch flickers, casting dancing shadows on the walls.
+
+What would you like to do?
+1. Light your torch
+2. Feel your way in the dark
+
+> 1
+The flickering light reveals ancient runes on the wall.
+The cave stretches deeper into the mountain. Your torch casts long shadows on the walls.
+
+What would you like to do?
+1. Study the runes
+2. Continue deeper
+
+> 2
+The tunnel narrows, and you must squeeze through a tight passage.
+On the other side, you find a small chamber with a glowing crystal.
+The crystal's light reveals a hidden treasure map carved into the floor.
+
+The End.
+```
+
+## 🍀 Advanced DSL Features
+
+### Random/Probabilistic Choices
+
+```ocaml
+random_choice [
+  (0.7, "You find a gold coin!", fun () -> say "Lucky day!");
+  (0.3, "A bat swoops at your head!", fun () -> say "You duck just in time!");
+]
+```
+
+### Flags & Conditional Branching
+
+```ocaml
+seq [
+  set_flag "has_sword" true;
+  if_flag "has_sword"
+    (say "You draw your sword bravely!")
+    (say "You wish you had a sword...");
+]
+```
+
+### Inventory Management
+
+```ocaml
+seq [
+  add_inventory player "magic key";
+  sayf "You now have: {{item}}" ["item", "magic key"];
+  remove_inventory player "magic key";
+]
+```
+
+### Dynamic Text Templating
+
+```ocaml
+sayf "Hello, {{name}}! Welcome to {{place}}." ["name", "Alice"; "place", "the Enchanted Forest"]
+```
+
+### Effects (Print, Sound, Custom)
+
+```ocaml
+effect (Sound "mysterious-chime.wav");
+effect (Print "A chill runs down your spine...");
+effect (Custom ("sparkle", `Assoc ["intensity", `Int 5]));
 ```
 
 ## Why Fable?

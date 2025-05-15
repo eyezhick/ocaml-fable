@@ -1,0 +1,5 @@
+(executable
+ (name fable_web)
+ (libraries fable js_of_ocaml js_of_ocaml.ppx)
+ (modes byte)
+ (js_of_ocaml (flags --pretty --source-map))) 
