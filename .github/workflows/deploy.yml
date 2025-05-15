@@ -14,8 +14,10 @@ jobs:
       - name: Setup OCaml
         uses: ocaml/setup-ocaml@v2
         with:
-          ocaml-version: '4.14.0'
-          opam-version: '2.1.0'
+          ocaml-compiler: '4.14.0'
+          opam-repositories: |
+            default: https://github.com/ocaml/opam-repository.git
+            beta: https://github.com/ocaml/opam-repository.git#beta
 
       - name: Install dependencies
         run: |
