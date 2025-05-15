@@ -29,13 +29,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install flask
 
-      - name: Create web files
+      - name: Create directories
         run: |
-          mkdir -p deploy
           mkdir -p deploy/css
           mkdir -p deploy/js
-          
-          # Create main HTML file
+
+      - name: Create HTML file
+        run: |
           echo '<!DOCTYPE html>
           <html>
           <head>
@@ -76,7 +76,7 @@ jobs:
                                   <textarea id="code-editor"></textarea>
                                   <div class="mt-3">
                                       <button class="btn btn-primary" onclick="runStory()">Run Story</button>
-                                      <button class="btn btn-secondary" onclick="loadExample(\'simple\')">Load Example</button>
+                                      <button class="btn btn-secondary" onclick="loadExample(\"simple\")">Load Example</button>
                                   </div>
                               </div>
                           </div>
@@ -101,13 +101,13 @@ jobs:
                               </div>
                               <div class="card-body">
                                   <div class="list-group">
-                                      <button class="list-group-item list-group-item-action" onclick="loadExample(\'simple\')">
+                                      <button class="list-group-item list-group-item-action" onclick="loadExample(\"simple\")">
                                           Simple Story
                                       </button>
-                                      <button class="list-group-item list-group-item-action" onclick="loadExample(\'choices\')">
+                                      <button class="list-group-item list-group-item-action" onclick="loadExample(\"choices\")">
                                           Story with Choices
                                       </button>
-                                      <button class="list-group-item list-group-item-action" onclick="loadExample(\'variables\')">
+                                      <button class="list-group-item list-group-item-action" onclick="loadExample(\"variables\")">
                                           Story with Variables
                                       </button>
                                   </div>
@@ -124,7 +124,8 @@ jobs:
           </body>
           </html>' > deploy/index.html
 
-          # Create CSS file
+      - name: Create CSS file
+        run: |
           echo '.story-output {
               min-height: 300px;
               max-height: 500px;
@@ -160,7 +161,8 @@ jobs:
               line-height: 1.6;
           }' > deploy/css/style.css
 
-          # Create JavaScript file
+      - name: Create JavaScript file
+        run: |
           echo '// Initialize CodeMirror
           const editor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
               mode: "ocaml",
@@ -173,7 +175,7 @@ jobs:
 
           // Example stories
           const examples = {
-              simple: `(* A simple story *)
+              simple: `(* A simple story with multiple scenes *)
               let story = {
                   title = "The Magic Forest";
                   start = "forest_entrance";
@@ -253,14 +255,13 @@ jobs:
           function runStory() {
               const code = editor.getValue();
               const output = document.getElementById("story-output");
-              output.innerHTML = "<div class='story-text'>Loading story...</div>";
+              output.innerHTML = "<div class=\"story-text\">Loading story...</div>";
               
-              // Simple story parser (this is a mock implementation)
               try {
                   const story = parseStory(code);
                   displayStory(story);
               } catch (error) {
-                  output.innerHTML = `<div class='story-text text-danger'>Error: ${error.message}</div>`;
+                  output.innerHTML = `<div class="story-text text-danger">Error: ${error.message}</div>`;
               }
           }
 
@@ -301,9 +302,9 @@ jobs:
               let html = `<div class="story-text">${scene.text}</div>`;
               
               if (scene.choices && scene.choices.length > 0) {
-                  html += "<div class='choices'>";
+                  html += "<div class=\"choices\">";
                   scene.choices.forEach(choice => {
-                      html += `<button class="story-choice" onclick="makeChoice('${choice.next}')">${choice.text}</button>`;
+                      html += `<button class="story-choice" onclick="makeChoice(\"${choice.next}\")">${choice.text}</button>`;
                   });
                   html += "</div>";
               }

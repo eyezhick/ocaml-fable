@@ -27,6 +27,7 @@ Fable is a domain-specific language (DSL) built in OCaml that makes it easy to c
 
 ### 🌲 The Magic Forest
 ```ocaml
+(* A simple story with multiple scenes *)
 let story = {
     title = "The Magic Forest";
     start = "forest_entrance";
@@ -38,6 +39,14 @@ let story = {
             choices = [
                 { text = "Enter the forest"; next = "forest_path" }
             ]
+        },
+        {
+            id = "forest_path";
+            text = "The path winds through ancient trees. 
+                   Sunlight filters through the leaves.";
+            choices = [
+                { text = "Continue deeper"; next = "forest_clearing" }
+            ]
         }
     ]
 }
@@ -45,6 +54,7 @@ let story = {
 
 ### 🏰 The Mysterious Cave
 ```ocaml
+(* A story with multiple choices and branching paths *)
 let story = {
     title = "The Mysterious Cave";
     start = "cave_entrance";
@@ -57,6 +67,15 @@ let story = {
                 { text = "Enter cautiously"; next = "cave_interior" },
                 { text = "Look for a torch"; next = "find_torch" }
             ]
+        },
+        {
+            id = "cave_interior";
+            text = "The cave is pitch black. 
+                   You can barely see your hand in front of your face.";
+            choices = [
+                { text = "Feel your way forward"; next = "cave_deep" },
+                { text = "Go back outside"; next = "cave_entrance" }
+            ]
         }
     ]
 }
@@ -64,6 +83,7 @@ let story = {
 
 ### 💎 The Treasure Hunt
 ```ocaml
+(* A story with variables and state management *)
 let story = {
     title = "The Treasure Hunt";
     start = "beach_start";
@@ -75,6 +95,15 @@ let story = {
                    Your coin purse jingles with 10 gold coins.";
             choices = [
                 { text = "Follow the map"; next = "jungle_path" }
+            ]
+        },
+        {
+            id = "jungle_path";
+            text = "The map leads you to a jungle path. 
+                   A merchant offers to buy your map for 5 coins.";
+            choices = [
+                { text = "Sell the map"; next = "merchant_deal" },
+                { text = "Keep the map"; next = "keep_map" }
             ]
         }
     ]
@@ -145,7 +174,7 @@ Check out our [Contributing Guide](CONTRIBUTING.md) to get started.
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## �� Acknowledgments
 
 - The OCaml community for their amazing language
 - All the storytellers who inspire us
