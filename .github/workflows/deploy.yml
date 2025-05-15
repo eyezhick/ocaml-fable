@@ -8,47 +8,23 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container:
+      image: ocaml/opam:ubuntu-22.04-ocaml-4.14
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup OCaml
-        uses: ocaml/setup-ocaml@v2
-        with:
-          ocaml-compiler: '4.14.0'
-          opam-repositories: |
-            default: https://github.com/ocaml/opam-repository.git
-          opam-depext: false
-          opam-disable-sandboxing: true
-
-      - name: Debug OCaml Setup
-        run: |
-          which ocaml
-          ocaml --version
-          which opam
-          opam --version
-          opam config list
-
       - name: Install dependencies
         run: |
-          opam init --disable-sandboxing -y
-          eval $(opam env)
           opam install . --deps-only --yes
 
       - name: Build web demo
         run: |
-          eval $(opam env)
           dune build web/fable_web.bc.js
 
-      - name: Prepare GitHub Pages files
-        run: |
-          chmod +x scripts/prepare-gh-pages.sh
-          ./scripts/prepare-gh-pages.sh
-
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: _build
-          publish_branch: gh-pages
-          commit_message: "Deploy web demo"
-          keep_files: true 
+          folder: _build/default/web
+          branch: gh-pages 
