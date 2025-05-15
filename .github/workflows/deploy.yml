@@ -13,28 +13,40 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up OCaml
-        uses: ocaml/setup-ocaml@v2
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          ocaml-compiler: '4.14.0'
-          opam-repositories: |
-            default: https://github.com/ocaml/opam-repository.git
+          python-version: '3.x'
 
       - name: Install dependencies
         run: |
-          opam install dune js_of_ocaml js_of_ocaml-ppx --yes
-          opam install . --deps-only --yes
+          python -m pip install --upgrade pip
+          pip install flask
 
-      - name: Build web demo
-        run: |
-          dune build web/fable_web.bc.js
-
-      - name: Prepare files for deployment
+      - name: Create web files
         run: |
           mkdir -p deploy
-          cp web/index.html deploy/
-          cp _build/default/web/fable_web.bc.js deploy/
-          cp _build/default/web/fable_web.bc.js.map deploy/ 2>/dev/null || true
+          echo '<!DOCTYPE html>
+          <html>
+          <head>
+              <title>Fable - Interactive Storytelling DSL</title>
+              <style>
+                  body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+                  .container { max-width: 800px; margin: 0 auto; }
+                  h1 { color: #2c3e50; }
+                  .demo { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h1>Fable - Interactive Storytelling DSL</h1>
+                  <div class="demo">
+                      <h2>Coming Soon!</h2>
+                      <p>We are working on bringing the interactive demo to the web. Stay tuned!</p>
+                  </div>
+              </div>
+          </body>
+          </html>' > deploy/index.html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
