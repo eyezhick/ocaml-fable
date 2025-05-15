@@ -17,13 +17,22 @@ jobs:
           ocaml-compiler: '4.14.0'
           opam-repositories: |
             default: https://github.com/ocaml/opam-repository.git
-            beta: https://github.com/ocaml/opam-repository.git#beta
+          opam-depext: false
+          opam-disable-sandboxing: true
+
+      - name: Debug OCaml Setup
+        run: |
+          which ocaml
+          ocaml --version
+          which opam
+          opam --version
+          opam config list
 
       - name: Install dependencies
         run: |
-          opam init -y
+          opam init --disable-sandboxing -y
           eval $(opam env)
-          opam install . --deps-only
+          opam install . --deps-only --yes
 
       - name: Build web demo
         run: |

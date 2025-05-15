@@ -1,8 +1,13 @@
-# Fable: Where Stories Come Alive in OCaml
+# 🦊 Fable: Where Stories Come Alive in OCaml
 
 > "Once upon a time, there was a language that made storytelling magical..."
 
 Welcome to Fable, where we're turning the art of storytelling into a functional programming adventure! This isn't your grandma's choose-your-own-adventure book (though she might enjoy it too). We're building a domain-specific language that lets you craft interactive narratives using the elegance of OCaml.
+
+## 🌐 Play the Web Demo
+
+Try Fable right in your browser! The web demo is automatically deployed from the main branch:
+[Play Fable Web Demo](https://eyezhick.github.io/ocaml-fable/)
 
 ## What's the Magic?
 
@@ -132,6 +137,11 @@ dune build
 
 # Run the example story
 dune exec fable examples/hello_world.ml
+
+# Or run the web demo locally
+cd web
+python3 -m http.server 8000  # or any other local server
+open http://localhost:8000
 ```
 
 ## Project Goals
