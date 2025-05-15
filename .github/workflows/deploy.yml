@@ -10,10 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    container:
-      image: ocaml/opam:ubuntu-22.04-ocaml-4.14
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install OCaml
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ocaml opam
+
+      - name: Initialize OPAM
+        run: |
+          opam init --disable-sandboxing -y
+          eval $(opam env)
 
       - name: Install dependencies
         run: |
@@ -23,8 +31,15 @@ jobs:
         run: |
           dune build web/fable_web.bc.js
 
+      - name: Prepare files for deployment
+        run: |
+          mkdir -p deploy
+          cp web/index.html deploy/
+          cp _build/default/web/fable_web.bc.js deploy/
+          cp _build/default/web/fable_web.bc.js.map deploy/ 2>/dev/null || true
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: _build/default/web
+          folder: deploy
           branch: gh-pages 
