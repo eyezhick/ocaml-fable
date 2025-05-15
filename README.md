@@ -1,170 +1,115 @@
-# 🦊 Fable: Where Stories Come Alive in OCaml
+# Fable: My OCaml DSL for Interactive Storytelling
 
-> "Once upon a time, there was a language that made storytelling magical..."
+I've created Fable, a domain-specific language (DSL) in OCaml for crafting interactive stories and text-based adventures. This project combines my passion for functional programming and interactive fiction, allowing me to build branching narratives with dynamic dialogue and world logic.
 
-Welcome to Fable, where we're turning the art of storytelling into a functional programming adventure! This isn't your grandma's choose-your-own-adventure book (though she might enjoy it too). We're building a domain-specific language that lets you craft interactive narratives using the elegance of OCaml.
+## 🌟 Features I've Implemented
 
-## 🌐 Play the Web Demo
+- **Branching Story Engine**: Create complex story paths with multiple choices and outcomes
+- **Dynamic Dialogue System**: Build natural conversations that adapt to player choices
+- **World State Management**: Track and modify story variables as the narrative unfolds
+- **Web Demo**: Play interactive stories directly in your browser
 
-Try Fable right in your browser! The web demo is automatically deployed from the main branch:
-[Play Fable Web Demo](https://eyezhick.github.io/ocaml-fable/)
+## 🚀 Getting Started
 
-## What's the Magic?
+### Prerequisites
 
-Fable is like having a magical quill that writes stories with type safety. It's where functional programming meets narrative design, and where your imagination meets OCaml's powerful type system. Think of it as "Twine meets Haskell" but with OCaml's pattern matching magic.
+- OCaml 4.14.0 or later
+- OPAM (OCaml package manager)
+- Dune build system
 
-### Features That Make Storytellers Smile
-
-- **Branching Narratives**: Create complex story trees that would make a weeping willow jealous
-- **Dynamic Characters**: Give your characters traits that evolve as the story unfolds
-- **World Building**: Define locations with behaviors that respond to player choices
-- **Type-Safe Storytelling**: Let OCaml's type system catch your plot holes before your readers do
-- **Random Events**: Add a dash of unpredictability to your tales
-- **Flags & Inventory**: Track player state, items, and world changes
-- **Dynamic Text**: Use templates for immersive, personalized output
-- **Extensible Effects**: Add sound, visuals, or custom hooks
-
-## Quick Start
-
-```ocaml
-(* A simple story about a brave adventurer *)
-let story =
-  seq [
-    say "You wake up in a dark cave, the air thick with mystery.";
-    choice [
-      ("Light your torch", fun () -> 
-        seq [
-          say "The flickering light reveals ancient runes on the wall.";
-          choice [
-            ("Study the runes", study_runes);
-            ("Continue deeper", explore_cave);
-          ]
-        ]);
-      ("Go back to sleep", fun () -> end_story "You sleep forever.");
-    ]
-  ]
-```
-
-## 🕹️ Demo: What Playing Fable Looks Like
-
-```
-You wake up in a dark cave, the air thick with mystery.
-Your torch flickers, casting dancing shadows on the walls.
-
-What would you like to do?
-1. Light your torch
-2. Feel your way in the dark
-
-> 1
-The flickering light reveals ancient runes on the wall.
-The cave stretches deeper into the mountain. Your torch casts long shadows on the walls.
-
-What would you like to do?
-1. Study the runes
-2. Continue deeper
-
-> 2
-The tunnel narrows, and you must squeeze through a tight passage.
-On the other side, you find a small chamber with a glowing crystal.
-The crystal's light reveals a hidden treasure map carved into the floor.
-
-The End.
-```
-
-## 🍀 Advanced DSL Features
-
-### Random/Probabilistic Choices
-
-```ocaml
-random_choice [
-  (0.7, "You find a gold coin!", fun () -> say "Lucky day!");
-  (0.3, "A bat swoops at your head!", fun () -> say "You duck just in time!");
-]
-```
-
-### Flags & Conditional Branching
-
-```ocaml
-seq [
-  set_flag "has_sword" true;
-  if_flag "has_sword"
-    (say "You draw your sword bravely!")
-    (say "You wish you had a sword...");
-]
-```
-
-### Inventory Management
-
-```ocaml
-seq [
-  add_inventory player "magic key";
-  sayf "You now have: {{item}}" ["item", "magic key"];
-  remove_inventory player "magic key";
-]
-```
-
-### Dynamic Text Templating
-
-```ocaml
-sayf "Hello, {{name}}! Welcome to {{place}}." ["name", "Alice"; "place", "the Enchanted Forest"]
-```
-
-### Effects (Print, Sound, Custom)
-
-```ocaml
-effect (Sound "mysterious-chime.wav");
-effect (Print "A chill runs down your spine...");
-effect (Custom ("sparkle", `Assoc ["intensity", `Int 5]));
-```
-
-## Why Fable?
-
-Because sometimes you want to write stories that are as elegant as your code. Fable brings together:
-
-- The expressiveness of functional programming
-- The power of algebraic data types
-- The beauty of pattern matching
-- The joy of interactive storytelling
-
-## Getting Started
+### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/ocaml-fable.git
+# Clone my repository
+git clone https://github.com/eyezhick/ocaml-fable.git
+cd ocaml-fable
+
+# Install dependencies
+opam install . --deps-only
 
 # Build the project
 dune build
-
-# Run the example story
-dune exec fable examples/hello_world.ml
-
-# Or run the web demo locally
-cd web
-python3 -m http.server 8000  # or any other local server
-open http://localhost:8000
 ```
 
-## Project Goals
+## 📝 Writing Stories
 
-- Create an intuitive DSL for narrative design
-- Explore the intersection of computational logic and storytelling
-- Build a bridge between game narrative modeling and functional programming
-- Make storytelling in OCaml as natural as writing prose
+Here's a simple example of how I write stories in Fable:
 
-## Contributing
+```ocaml
+let story = {
+  title = "The Mysterious Door";
+  start = "room";
+  locations = [
+    {
+      id = "room";
+      description = "You stand in a dimly lit room. A mysterious door stands before you.";
+      choices = [
+        {
+          text = "Open the door";
+          next = "beyond";
+          effects = [SetFlag "door_opened"];
+        };
+        {
+          text = "Look around";
+          next = "room";
+          effects = [AddItem "key"];
+        };
+      ];
+    };
+    {
+      id = "beyond";
+      description = "Beyond the door lies a magical garden.";
+      choices = [
+        {
+          text = "Enter the garden";
+          next = "garden";
+          effects = [];
+        };
+      ];
+    };
+  ];
+};
+```
 
-Found a bug? Have a story to tell? Want to add your own chapter to Fable? Pull requests are welcome! Let's make this project as collaborative as the stories it helps create.
+## 🌐 Play the Web Demo
 
-## Learn More
+I've created a web demo where you can try out some of my interactive stories:
 
-- [Documentation](docs/README.md)
-- [Examples](examples/)
-- [Contributing Guidelines](CONTRIBUTING.md)
+[Play Fable Web Demo](https://eyezhick.github.io/ocaml-fable/)
 
-## License
+To run the web demo locally:
+```bash
+# Build the web demo
+dune build web/fable_web.bc.js
+
+# Start a local server
+python3 -m http.server 8000
+```
+Then open http://localhost:8000 in your browser.
+
+## 🛠️ Project Structure
+
+```
+ocaml-fable/
+├── lib/           # Core DSL implementation
+├── examples/      # Sample stories I've written
+├── web/          # Web interface for playing stories
+└── tests/        # Test cases for the DSL
+```
+
+## 🤝 Contributing
+
+While this is primarily my personal project, I'm open to suggestions and improvements! Feel free to:
+- Open issues for bugs or feature requests
+- Submit pull requests for improvements
+- Share your own stories created with Fable
+
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
+## 🙏 Acknowledgments
 
-*"In a world where code meets narrative, Fable is your storyteller's toolkit."* 🦊✨
+- The OCaml community for their excellent tools and libraries
+- Interactive fiction authors who inspired this project
+- Everyone who has tried out my stories and provided feedback
