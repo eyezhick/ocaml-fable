@@ -1,0 +1,6 @@
+(library
+ (name fable)
+ (public_name fable)
+ (libraries base ppx_deriving.runtime yojson cmdliner)
+ (preprocess
+  (pps ppx_deriving.show ppx_deriving.eq ppx_deriving.yojson))) 

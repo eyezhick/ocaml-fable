@@ -1,0 +1,22 @@
+(lang dune 3.0)
+(name fable)
+(version 0.1.0)
+(description "A functional DSL for generating interactive story worlds")
+(authors "Your Name")
+(license MIT)
+(generate_opam_files true)
+
+(package
+ (name fable)
+ (synopsis "A functional DSL for generating interactive story worlds")
+ (description "Fable is a domain-specific language for building interactive fiction and procedural narratives in OCaml.")
+ (depends
+  (ocaml (>= 4.14.0))
+  (dune (>= 3.0))
+  (base (>= v0.15.0))
+  (ppx_deriving (>= 5.2.1))
+  (ppx_deriving_yojson (>= 3.6.1))
+  (yojson (>= 2.0.2))
+  (cmdliner (>= 1.1.0))
+  (js_of_ocaml (>= 4.0.0) :optional)
+  (js_of_ocaml-ppx (>= 4.0.0) :optional))) 
