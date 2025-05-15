@@ -1,0 +1,34 @@
+.story-output {
+    min-height: 300px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.CodeMirror {
+    height: 300px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.story-choice {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #e9ecef;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.story-choice:hover {
+    background-color: #dee2e6;
+}
+
+.story-text {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
