@@ -32,27 +32,303 @@ jobs:
       - name: Create web files
         run: |
           mkdir -p deploy
+          mkdir -p deploy/css
+          mkdir -p deploy/js
+          
+          # Create main HTML file
           echo '<!DOCTYPE html>
           <html>
           <head>
               <title>Fable - Interactive Storytelling DSL</title>
-              <style>
-                  body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-                  .container { max-width: 800px; margin: 0 auto; }
-                  h1 { color: #2c3e50; }
-                  .demo { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
-              </style>
+              <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+              <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css" rel="stylesheet">
+              <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css" rel="stylesheet">
+              <link href="css/style.css" rel="stylesheet">
           </head>
           <body>
-              <div class="container">
-                  <h1>Fable - Interactive Storytelling DSL</h1>
-                  <div class="demo">
-                      <h2>Coming Soon!</h2>
-                      <p>We are working on bringing the interactive demo to the web. Stay tuned!</p>
+              <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                  <div class="container">
+                      <a class="navbar-brand" href="#">Fable</a>
+                      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                          <span class="navbar-toggler-icon"></span>
+                      </button>
+                      <div class="collapse navbar-collapse" id="navbarNav">
+                          <ul class="navbar-nav">
+                              <li class="nav-item">
+                                  <a class="nav-link active" href="#demo">Demo</a>
+                              </li>
+                              <li class="nav-item">
+                                  <a class="nav-link" href="#examples">Examples</a>
+                              </li>
+                          </ul>
+                      </div>
+                  </div>
+              </nav>
+
+              <div class="container mt-4">
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="card">
+                              <div class="card-header">
+                                  <h5 class="card-title mb-0">Fable Code Editor</h5>
+                              </div>
+                              <div class="card-body">
+                                  <textarea id="code-editor"></textarea>
+                                  <div class="mt-3">
+                                      <button class="btn btn-primary" onclick="runStory()">Run Story</button>
+                                      <button class="btn btn-secondary" onclick="loadExample(\'simple\')">Load Example</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="card">
+                              <div class="card-header">
+                                  <h5 class="card-title mb-0">Story Preview</h5>
+                              </div>
+                              <div class="card-body">
+                                  <div id="story-output" class="story-output"></div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row mt-4">
+                      <div class="col-12">
+                          <div class="card">
+                              <div class="card-header">
+                                  <h5 class="card-title mb-0">Example Stories</h5>
+                              </div>
+                              <div class="card-body">
+                                  <div class="list-group">
+                                      <button class="list-group-item list-group-item-action" onclick="loadExample(\'simple\')">
+                                          Simple Story
+                                      </button>
+                                      <button class="list-group-item list-group-item-action" onclick="loadExample(\'choices\')">
+                                          Story with Choices
+                                      </button>
+                                      <button class="list-group-item list-group-item-action" onclick="loadExample(\'variables\')">
+                                          Story with Variables
+                                      </button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
                   </div>
               </div>
+
+              <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/ocaml/ocaml.min.js"></script>
+              <script src="js/fable.js"></script>
           </body>
           </html>' > deploy/index.html
+
+          # Create CSS file
+          echo '.story-output {
+              min-height: 300px;
+              max-height: 500px;
+              overflow-y: auto;
+              padding: 15px;
+              background-color: #f8f9fa;
+              border-radius: 4px;
+          }
+
+          .CodeMirror {
+              height: 300px;
+              border: 1px solid #ddd;
+              border-radius: 4px;
+          }
+
+          .story-choice {
+              display: block;
+              margin: 10px 0;
+              padding: 10px;
+              background-color: #e9ecef;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+              transition: background-color 0.2s;
+          }
+
+          .story-choice:hover {
+              background-color: #dee2e6;
+          }
+
+          .story-text {
+              margin-bottom: 15px;
+              line-height: 1.6;
+          }' > deploy/css/style.css
+
+          # Create JavaScript file
+          echo '// Initialize CodeMirror
+          const editor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
+              mode: "ocaml",
+              theme: "monokai",
+              lineNumbers: true,
+              indentUnit: 2,
+              tabSize: 2,
+              lineWrapping: true
+          });
+
+          // Example stories
+          const examples = {
+              simple: `(* A simple story *)
+              let story = {
+                  title = "The Magic Forest";
+                  start = "forest_entrance";
+                  scenes = [
+                      {
+                          id = "forest_entrance";
+                          text = "You stand at the entrance of a magical forest. The trees seem to whisper secrets.";
+                          choices = [
+                              { text = "Enter the forest"; next = "forest_path" }
+                          ]
+                      },
+                      {
+                          id = "forest_path";
+                          text = "The path winds through ancient trees. Sunlight filters through the leaves.";
+                          choices = [
+                              { text = "Continue deeper"; next = "forest_clearing" }
+                          ]
+                      }
+                  ]
+              }`,
+
+              choices: `(* A story with multiple choices *)
+              let story = {
+                  title = "The Mysterious Cave";
+                  start = "cave_entrance";
+                  scenes = [
+                      {
+                          id = "cave_entrance";
+                          text = "A dark cave looms before you. Strange sounds echo from within.";
+                          choices = [
+                              { text = "Enter cautiously"; next = "cave_interior" },
+                              { text = "Look for a torch"; next = "find_torch" }
+                          ]
+                      },
+                      {
+                          id = "cave_interior";
+                          text = "The cave is pitch black. You can barely see your hand in front of your face.";
+                          choices = [
+                              { text = "Feel your way forward"; next = "cave_deep" },
+                              { text = "Go back outside"; next = "cave_entrance" }
+                          ]
+                      }
+                  ]
+              }`,
+
+              variables: `(* A story with variables *)
+              let story = {
+                  title = "The Treasure Hunt";
+                  start = "beach_start";
+                  variables = ["coins", "map"];
+                  scenes = [
+                      {
+                          id = "beach_start";
+                          text = "You find a treasure map on the beach. Your coin purse jingles with 10 gold coins.";
+                          choices = [
+                              { text = "Follow the map"; next = "jungle_path" }
+                          ]
+                      },
+                      {
+                          id = "jungle_path";
+                          text = "The map leads you to a jungle path. A merchant offers to buy your map for 5 coins.";
+                          choices = [
+                              { text = "Sell the map"; next = "merchant_deal" },
+                              { text = "Keep the map"; next = "keep_map" }
+                          ]
+                      }
+                  ]
+              }`
+          };
+
+          // Load an example into the editor
+          function loadExample(name) {
+              editor.setValue(examples[name]);
+          }
+
+          // Run the story
+          function runStory() {
+              const code = editor.getValue();
+              const output = document.getElementById("story-output");
+              output.innerHTML = "<div class='story-text'>Loading story...</div>";
+              
+              // Simple story parser (this is a mock implementation)
+              try {
+                  const story = parseStory(code);
+                  displayStory(story);
+              } catch (error) {
+                  output.innerHTML = `<div class='story-text text-danger'>Error: ${error.message}</div>`;
+              }
+          }
+
+          // Mock story parser
+          function parseStory(code) {
+              // This is a very simple parser that just extracts the story structure
+              // In a real implementation, this would be much more sophisticated
+              const story = {
+                  title: "Demo Story",
+                  currentScene: "start",
+                  scenes: {
+                      start: {
+                          text: "This is a demo of the Fable interactive storytelling system.",
+                          choices: [
+                              { text: "Continue", next: "scene1" }
+                          ]
+                      },
+                      scene1: {
+                          text: "You can write your own stories using the Fable DSL!",
+                          choices: [
+                              { text: "Learn More", next: "end" }
+                          ]
+                      },
+                      end: {
+                          text: "Check out the example stories to see what you can create!",
+                          choices: []
+                      }
+                  }
+              };
+              return story;
+          }
+
+          // Display the story
+          function displayStory(story) {
+              const output = document.getElementById("story-output");
+              const scene = story.scenes[story.currentScene];
+              
+              let html = `<div class="story-text">${scene.text}</div>`;
+              
+              if (scene.choices && scene.choices.length > 0) {
+                  html += "<div class='choices'>";
+                  scene.choices.forEach(choice => {
+                      html += `<button class="story-choice" onclick="makeChoice('${choice.next}')">${choice.text}</button>`;
+                  });
+                  html += "</div>";
+              }
+              
+              output.innerHTML = html;
+          }
+
+          // Handle choice selection
+          function makeChoice(nextScene) {
+              const story = {
+                  currentScene: nextScene,
+                  scenes: {
+                      scene1: {
+                          text: "You chose to continue the story!",
+                          choices: [
+                              { text: "Go back", next: "start" }
+                          ]
+                      }
+                  }
+              };
+              displayStory(story);
+          }
+
+          // Load the simple example by default
+          loadExample("simple");' > deploy/js/fable.js
 
       - name: Deploy to GitHub Pages
         id: deployment
