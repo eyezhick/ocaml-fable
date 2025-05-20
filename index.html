@@ -7,7 +7,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="#">Fable</a>
@@ -29,51 +29,75 @@
 
     <div class="container mt-4">
         <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Fable Code Editor</h5>
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Story</h5>
                     </div>
                     <div class="card-body">
-                        <textarea id="code-editor"></textarea>
-                        <div class="mt-3">
-                            <button class="btn btn-primary" onclick="runStory()">Run Story</button>
-                            <button class="btn btn-secondary" onclick="loadExample(\"simple\")">Load Example</button>
-                        </div>
+                        <div id="story" class="story-text"></div>
+                        <div id="choices" class="choices-container mt-3"></div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Story Preview</h5>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">Character Status</h5>
                     </div>
                     <div class="card-body">
-                        <div id="story-output" class="story-output"></div>
+                        <div id="mood-display" class="mood-display mb-3"></div>
+                        <div id="location" class="location-display mb-3"></div>
+                        <div id="inventory" class="inventory-display"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="card-title mb-0">Effects</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="effects" class="effects-display"></div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Example Stories</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group">
-                            <button class="list-group-item list-group-item-action" onclick="loadExample(\"simple\")">
-                                Simple Story
-                            </button>
-                            <button class="list-group-item list-group-item-action" onclick="loadExample(\"choices\")">
-                                Story with Choices
-                            </button>
-                            <button class="list-group-item list-group-item-action" onclick="loadExample(\"variables\")">
-                                Story with Variables
-                            </button>
-                        </div>
-                    </div>
+    <!-- Save Dialog -->
+    <div id="save-dialog" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Save Game</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="save-name" placeholder="Save name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveGame()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Dialog -->
+    <div id="load-dialog" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Load Game</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-select" id="load-select">
+                        <option value="">Select a save file...</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="loadGame()">Load</button>
                 </div>
             </div>
         </div>
